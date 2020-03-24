@@ -1,8 +1,8 @@
 {{-- layouts/admin.blade.phpを読み込む--}}
-@extends('layouts.admin')
+@extends('layouts.profile')
 
 {{-- admin.blade.php@yield('title')に'ニュースの新規作成'を埋め込む--}}
-@section('title', 'My Profile')
+@section('title', 'My Profile Create')
 
 {{-- admin.blade.phpの@yield('content')に以下のタグを埋め込む　--}}
 @section('content')

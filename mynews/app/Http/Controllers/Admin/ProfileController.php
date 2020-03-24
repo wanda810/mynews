@@ -8,6 +8,20 @@ use App\Profile;
 
 class ProfileController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $name = $request->name;
+        if ($name != '') {
+            // 検索されたら検索結果を取得する
+            $posts = Profile::where('name', $name)->get();
+        } else {
+            // それ以外はすべてのニュースを取得する
+            $posts = Profile::all();
+        }
+        return view('admin.profile.index', ['posts' => $posts, 'name' => $name]);
+    }
+
     public function add()
     {
       return view('admin.profile.create');
@@ -36,13 +50,31 @@ class ProfileController extends Controller
 
 
 
-    public function edit()
+    public function edit(REQUEST $request)
     {
-      return view('admin.profile.edit');
+      $profile = Profile::find($request->id);
+      if (empty($profile)) {
+        abort(404);
+      }
+      return view('admin.profile.edit', ['profile_form' => $profile]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
-      return redirect('admin/profile/edit');
+
+          // Validationをかける
+          $this->validate($request, Profile::$rules);
+          // News Modelからデータを取得する
+          $profile = Profile::find($request->id);
+          // 送信されてきたフォームデータを格納する
+          $profile_form = $request->all();
+          unset($profile_form['_token']);
+          // 該当するデータを上書きして保存する
+
+        
+          $profile->fill($profile_form)->save();
+
+          return redirect('admin/profile');
+
     }
 }
