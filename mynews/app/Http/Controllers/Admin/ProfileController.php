@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Profile;
+use App\profileshistories;
+use Carbon\Carbon;
+
+
 
 class ProfileController extends Controller
 {
@@ -45,7 +49,7 @@ class ProfileController extends Controller
       $news->fill($form);
       $news->save();
 
-      return redirect('admin/profile/create');
+      return redirect('admin/profile/');
     }
 
 
@@ -71,9 +75,13 @@ class ProfileController extends Controller
           unset($profile_form['_token']);
           // 該当するデータを上書きして保存する
 
-        
+
           $profile->fill($profile_form)->save();
 
+          $profileshistories = new Profileshistories;
+          $profileshistories->profiles_id = $profile->id;
+          $profileshistories->edited_at = Carbon::now();
+          $profileshistories->save();
           return redirect('admin/profile');
 
     }
